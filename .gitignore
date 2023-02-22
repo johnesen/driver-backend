@@ -1,13 +1,13 @@
 staticfiles/*
-media/*
-static/*
-back_media/*
-back_static/*
+media/
+static/
+back_media/
+back_static/
 .idea/*
 .env
 **/migrations/00*.py
 db.sqlite3
-.venv/*
+.venv/
 db.sqlite3
 .idea/
 back_media/
@@ -15,3 +15,4 @@ media/
 venv/
 *.pyc
 storage/
+**/__pycache__
