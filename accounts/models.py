@@ -11,9 +11,9 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         max_length=250, unique=True, verbose_name=_("Логин"), null=True, blank=True
     )
     email = models.EmailField(_("почта"), unique=True, null=True, blank=True)
-    password = models.CharField(
-        max_length=128, blank=True, null=True, verbose_name=_("password")
-    )
+    # password = models.CharField(
+    #     max_length=128, blank=True, null=True, verbose_name=_("password")
+    # )
     phone = models.CharField(
         max_length=50,
         unique=True,
@@ -92,7 +92,7 @@ class DriverProfile(BaseModel):
     )
 
     def __str__(self) -> str:
-        return f"{self.user}"
+        return f"{self.user} - {self.driver_age}"
 
     class Meta:
         db_table = "drivers"

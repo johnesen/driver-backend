@@ -6,10 +6,10 @@ from accounts.models import DriverProfile, ClientProfile
 
 class Routes(BaseModel):
     where_from = models.CharField(
-        blank=False, null=False, max_length=250, verbose_name=_("Имя")
+        blank=False, null=False, max_length=250, verbose_name=_("откуда")
     )
     where_to = models.CharField(
-        blank=True, null=True, max_length=100, verbose_name=_("Фамилия")
+        blank=True, null=True, max_length=100, verbose_name=_("куда")
     )
     driver = models.ForeignKey(
         DriverProfile,
@@ -27,18 +27,20 @@ class Routes(BaseModel):
         verbose_name=_("Цена"),
     )
     passengers = models.ManyToManyField(
-        ClientProfile, related_name="travels", verbose_name=_("пассажиры")
+        ClientProfile,
+        related_name="travels",
+        verbose_name=_("пассажиры")
     )
     is_open = models.BooleanField(default=False, verbose_name=_("остановки"))
     departure_date = models.DateTimeField(
         null=False, blank=False, verbose_name=_("Дата выезда")
     )
-    condition = models.CharField(
-        blank=True, null=True, max_length=100, verbose_name=_("Фамилия")
+    condition = models.TextField(
+        blank=True, null=True, max_length=100, verbose_name=_("условия")
     )
 
     def __str__(self):
-        return
+        return f"{self.where_from} - {self.where_to}"
 
     class Meta:
         db_table = "routes"

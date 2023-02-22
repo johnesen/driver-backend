@@ -89,3 +89,22 @@ class ProfileSerializer(serializers.ModelSerializer):
             "photo",
             "is_deleted",
         ]
+
+
+class DriverReviewsSerializer(serializers.Serializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+    stars = serializers.CharField(read_only=True)
+    comment = serializers.CharField(read_only=True)
+
+
+class DriverSerializer(serializers.Serializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = UserSerializer(read_only=True)
+    about = serializers.CharField(read_only=True)
+    driver_age = serializers.IntegerField(read_only=True)
+    experience = serializers.CharField(read_only=True)
+    car = serializers.CharField(read_only=True)
+    seats_amount = serializers.IntegerField(read_only=True)
+    reviews = DriverReviewsSerializer(read_only=True, many=True)
+    is_deleted = serializers.BooleanField(read_only=True)
+

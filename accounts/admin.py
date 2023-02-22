@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import User, DriverProfile, ClientProfile
+from django.contrib.auth.admin import UserAdmin
+from .models import User, DriverProfile
 from .forms import UserImageCompressForm
 from common.mixins import PhotoTagAdminMixin
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin, PhotoTagAdminMixin):
-    model = User
+class UserAdmin2(UserAdmin, PhotoTagAdminMixin):
+    # model = User
     list_display = (
         "photo_tag",
         "login",
@@ -20,7 +21,12 @@ class UserAdmin(admin.ModelAdmin, PhotoTagAdminMixin):
         "is_deleted",
     )
     list_editable = ("is_active", "is_deleted")
-    readonly_fields = ("created_at", "updated_at", "password", "last_login")
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+        "last_login",
+        "password",
+    )
     search_fields = ("full_name",)
     list_per_page = 25
     form = UserImageCompressForm
@@ -38,23 +44,29 @@ class UserAdmin(admin.ModelAdmin, PhotoTagAdminMixin):
                     "last_name",
                     "middle_name",
                     "code",
-                    "password",
                     "photo",
                     "is_active",
                     "is_deleted",
                     "is_driver",
                     "is_client",
-                )
-            },
-        ),
-        (
-            "Даты",
-            {
-                "fields": (
                     "created_at",
                     "updated_at",
                     "last_login",
                 )
+            },
+        ),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "login",
+                    "password1",
+                    "password2",
+                    "is_staff",
+                ),
             },
         ),
     )
@@ -70,4 +82,3 @@ class UserAdmin(admin.ModelAdmin, PhotoTagAdminMixin):
 
 admin.site.unregister(Group)
 admin.site.register(DriverProfile)
-admin.site.register(ClientProfile)

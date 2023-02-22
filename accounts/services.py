@@ -13,7 +13,7 @@ from common.exceptions import *
 from common.message import my_message
 from common.validators import validate_user_password
 
-from accounts.models import User, DriverProfile, ClientProfile
+from accounts.models import User, DriverProfile
 from accounts.settings import PHONE_RE, MAIL_RE, UserTypes
 
 
@@ -42,7 +42,6 @@ class TokenService:
 class UserService:
     __model = User
     __driver_model = DriverProfile
-    __client_model = ClientProfile
 
     @classmethod
     def get(cls, **filters) -> User:
@@ -89,7 +88,6 @@ class UserService:
         if user_type == UserTypes.client:
             user.is_client = True
             user.save()
-            cls.__client_model.objects.create(user=user)
         return user
 
     @classmethod

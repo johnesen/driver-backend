@@ -14,9 +14,9 @@ PRODUCTION = env("PRODUCTION", default=False, cast=bool)
 # Application definition
 
 LOCAL_APPS = [
+    "accounts.apps.AccountsConfig",
     "common.apps.CommonConfig",
     "route.apps.RouteConfig",
-    "accounts.apps.AccountsConfig",
 ]
 
 THIRD_PARTY_APPS = [
