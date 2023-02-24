@@ -1,7 +1,12 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from common.models import BaseModel
 from accounts.models import DriverProfile, ClientProfile
+from route.settings import ContactTypes
+
+
+User = get_user_model()
 
 
 class Routes(BaseModel):
@@ -28,8 +33,9 @@ class Routes(BaseModel):
     )
     passengers = models.ManyToManyField(
         ClientProfile,
+        blank=True,
         related_name="travels",
-        verbose_name=_("пассажиры")
+        verbose_name=_("пассажиры"),
     )
     is_open = models.BooleanField(default=False, verbose_name=_("остановки"))
     departure_date = models.DateTimeField(
@@ -47,3 +53,30 @@ class Routes(BaseModel):
         verbose_name = "Маршрут"
         verbose_name_plural = "Маршруты"
         ordering = ("-created_at",)
+
+
+class RouteRequestByUser(BaseModel):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="routes_passenger",
+        verbose_name=_("Пользователь"),
+    )
+    route = models.ForeignKey(
+        Routes, on_delete=models.CASCADE, related_name="passangers_request"
+    )
+
+
+class RouteRequestContacts(BaseModel):
+    rr = models.ForeignKey(
+        RouteRequestByUser,
+        on_delete=models.CASCADE,
+        related_name="contacts",
+        verbose_name=_("Заявка на маршрут"),
+    )
+    contact_type = models.CharField(
+        max_length=50, choices=ContactTypes.choice(), default=ContactTypes.phone
+    )
+    contact_value = models.CharField(
+        max_length=250, blank=False, null=False, verbose_name=_("значение контакта")
+    )

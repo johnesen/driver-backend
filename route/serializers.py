@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.serializers import *
-from route.models import Routes
+from route.models import Routes, RouteRequestByUser, RouteRequestContacts
 
 
 class RouteSerializer(serializers.Serializer):
@@ -31,3 +31,22 @@ class RouteModelCreateSerializer(serializers.ModelSerializer):
             "departure_date",
             "condition",
         ]
+
+
+class RouteRequestContactsSerializer(serializers.Serializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+    contact_type = serializers.CharField(read_only=True)
+    contact_value = serializers.CharField(read_only=True)
+
+
+class RouteRequestSerializer(serializers.Serializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = UserSerializer(read_only=True)
+    route = RouteSerializer(read_only=True)
+    contacts = RouteRequestContactsSerializer(many=True, read_only=True)
+
+
+class RouteRequestCreateSerializer(serializers.Serializer):
+    route = serializers.UUIDField(required=True)
+    contact_type = serializers.CharField()
+    contact_value = serializers.CharField()

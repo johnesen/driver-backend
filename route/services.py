@@ -2,15 +2,24 @@ import random
 from typing import Tuple
 from rest_framework import exceptions
 
-from route.models import Routes
+from route.models import Routes, RouteRequestByUser, RouteRequestContacts
 
 
 class RouteService:
     __model = Routes
+    __rr_model = RouteRequestByUser
+    __rr_contact_model = RouteRequestContacts
 
     @classmethod
     def get_routes(cls, **filters):
         return cls.__model.objects.filter(**filters).order_by("-created_at")
+
+    @classmethod
+    def create_route_request(cls, user, route, contact_type, contact_value):
+        routeRequest = cls.__rr_model.objects.create(user=user, route_id=route)
+        cls.__rr_contact_model.objects.create(
+            rr=routeRequest, contact_type=contact_type, contact_value=contact_value
+        )
 
     @classmethod
     def craete_route(

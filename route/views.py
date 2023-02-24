@@ -33,3 +33,20 @@ class RouteCreateAPIView(generics.GenericAPIView):
         )
 
         return Response(RouteSerializer(route).data, status=status.HTTP_201_CREATED)
+
+
+class RouteRequestCreateAPIView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = RouteRequestCreateSerializer
+    queryset = RouteRequestByUser.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        rr = RouteService.create_route_request(
+            user=request.user,
+            route=request.data.get("route"),
+            contact_type=request.data.get("contact_type"),
+            contact_value=request.data.get("contact_value"),
+        )
+        return Response(RouteRequestSerializer(rr).data, status=status.HTTP_201_CREATED)
