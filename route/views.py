@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import status, generics, permissions
+from rest_framework import status, generics, permissions, mixins
 
 from common.permissions import IsDriver
 
@@ -50,3 +50,26 @@ class RouteRequestCreateAPIView(generics.GenericAPIView):
             contact_value=request.data.get("contact_value"),
         )
         return Response(RouteRequestSerializer(rr).data, status=status.HTTP_201_CREATED)
+
+
+class RequestForDriverListAPIView(generics.ListAPIView):
+    permission_classes = [IsDriver]
+    serializer_class = RouteRequestSerializer
+
+    def get_queryset(self):
+        return RouteService.get_driver_route_request(self.request.user)
+
+
+class RouteRequestAcception(
+    mixins.UpdateModelMixin, mixins.RetrieveModelMixin, generics.GenericAPIView
+):
+    serializer_class = RouteRequestModelSerializer
+    queryset = RouteRequestByUser.objects.all()
+    permission_classes = []
+    lookup_field = "id"
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)

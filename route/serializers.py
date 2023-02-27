@@ -44,6 +44,21 @@ class RouteRequestSerializer(serializers.Serializer):
     user = UserSerializer(read_only=True)
     route = RouteSerializer(read_only=True)
     contacts = RouteRequestContactsSerializer(many=True, read_only=True)
+    is_accepted = serializers.BooleanField(read_only=True)
+
+
+class RouteRequestModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RouteRequestByUser
+        fields = ["id", "is_accepted"]
+
+    def update(self, instance, validated_data):
+        is_accepted = validated_data.get("is_accepted")
+        if is_accepted:
+            route = instance.route
+            route.passengers.add(instance.user.id)
+            route.save()
+        return super().update(instance, validated_data)
 
 
 class RouteRequestCreateSerializer(serializers.Serializer):

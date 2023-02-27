@@ -44,3 +44,10 @@ class RouteService:
         )
         route.save()
         return route
+
+    @classmethod
+    def get_driver_route_request(cls, user):
+        queryset = cls.__rr_model.objects.filter(
+            route__driver__user=user, is_deleted=False
+        )
+        return queryset

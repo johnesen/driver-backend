@@ -32,7 +32,7 @@ class Routes(BaseModel):
         verbose_name=_("Цена"),
     )
     passengers = models.ManyToManyField(
-        ClientProfile,
+        User,
         blank=True,
         related_name="travels",
         verbose_name=_("пассажиры"),
@@ -65,6 +65,7 @@ class RouteRequestByUser(BaseModel):
     route = models.ForeignKey(
         Routes, on_delete=models.CASCADE, related_name="passangers_request"
     )
+    is_accepted = models.BooleanField(default=False, verbose_name=_("Принять"))
 
 
 class RouteRequestContacts(BaseModel):
