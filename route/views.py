@@ -61,15 +61,12 @@ class RequestForDriverListAPIView(generics.ListAPIView):
 
 
 class RouteRequestAcception(
-    mixins.UpdateModelMixin, mixins.RetrieveModelMixin, generics.GenericAPIView
+    mixins.UpdateModelMixin, generics.GenericAPIView
 ):
     serializer_class = RouteRequestModelSerializer
     queryset = RouteRequestByUser.objects.all()
-    permission_classes = []
+    permission_classes = [IsDriver]
     lookup_field = "id"
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
